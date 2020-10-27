@@ -10,7 +10,7 @@ class UserController(val userService: UserService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    fun createUser(@RequestBody user: User): ResponseEntity<Any> {
+    fun createUser(@RequestBody user: User): Unit {
         return userService.createUser(user)
     }
 }

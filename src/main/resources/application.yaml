@@ -4,7 +4,7 @@ spring:
   kafka:
     listener:
       concurrency: 1
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    bootstrap-servers: [localhost:9092]
     client-id: kafka-kotlin-membership
     admin:
       fail-fast: true

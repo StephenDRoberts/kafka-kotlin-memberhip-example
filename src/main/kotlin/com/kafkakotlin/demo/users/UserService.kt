@@ -8,7 +8,7 @@ class UserService(
         val userRepository: UserRepository
 ) {
 
-    fun createUser(user: User): ResponseEntity<Any> {
+    fun createUser(user: User): Unit {
         return userRepository.createUser(user)
     }
 
