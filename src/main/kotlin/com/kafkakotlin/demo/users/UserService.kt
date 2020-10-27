@@ -4,10 +4,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
-class UserService {
+class UserService(
+        val userRepository: UserRepository
+) {
 
     fun createUser(user: User): ResponseEntity<Any> {
-        return ResponseEntity.ok("All good")
+        return userRepository.createUser(user)
     }
 
 }
