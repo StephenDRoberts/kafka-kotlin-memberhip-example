@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: "kafka-kotlin-membership"
+  kafka:
+    listener:
+      concurrency: 1
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    client-id: kafka-kotlin-membership
+    admin:
+      fail-fast: true
+    consumer:
+      enable-auto-commit: false
+      fetch-max-wait: 500ms
+      group-id: ${KAFKA_GROUP_ID}
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        "[value.subject.name.strategy]": io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
+        "[key.subject.name.strategy]": io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
+    producer:
+      acks: "all"
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        "[value.subject.name.strategy]": io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
+        "[key.subject.name.strategy]": io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
+    properties:
+      request.timeout.ms: 10000
+      delivery.timeout.ms: 10000
+      max.block.ms: 5000
+
+kafka:
+  producer:
+    topic: ${PRODUCER_TOPIC}
+    brokers: ${KAFKA_BOOTSTRAP_SERVERS}
+  consumer:
+    topic: ${CONSUMER_TOPIC}
+
