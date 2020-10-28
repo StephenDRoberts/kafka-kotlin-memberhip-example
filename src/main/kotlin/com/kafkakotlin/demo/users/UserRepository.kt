@@ -1,8 +1,6 @@
 package com.kafkakotlin.demo.users
 
 import com.kafkakotlin.demo.kafka.producer.KafkaProducer
-import org.springframework.http.ResponseEntity
-import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
 @Component

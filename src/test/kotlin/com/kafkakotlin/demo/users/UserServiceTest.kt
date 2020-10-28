@@ -1,8 +1,7 @@
 package com.kafkakotlin.demo.users
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
+import com.kafkakotlin.demo.kafka.producer.KafkaProducer
+import io.mockk.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
@@ -12,7 +11,8 @@ import org.springframework.http.ResponseEntity
 @DisplayName("User Service Tests")
 internal class UserServiceTest {
     private val userRepository = mockk<UserRepository>()
-    private val underTest = UserRepository()
+    private val kafkaProducer = mockk<KafkaProducer>()
+    private val underTest = UserRepository(kafkaProducer)
 
     private val dummyUser = User(
             username = "Steve",
@@ -23,7 +23,7 @@ internal class UserServiceTest {
     @Test
     fun `should call userRespository with the correct parameters`() {
         val userSlot = slot<User>()
-        every {userRepository.createUser(capture(userSlot))} returns ResponseEntity.ok("200")
+        every {userRepository.createUser(capture(userSlot))} just runs
 
         userRepository.createUser(dummyUser)
 
