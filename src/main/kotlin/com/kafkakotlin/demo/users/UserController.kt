@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/user")
 class UserController(
-        val userService: UserService,
-        val store: ReadOnlyKeyValueStore<Long, String>
+        val userService: UserService
+//        val store: ReadOnlyKeyValueStore<Any, Any>
 ) {
 
     @PostMapping
@@ -19,9 +19,9 @@ class UserController(
         return userService.createUser(user)
     }
 
-    @GetMapping
-    fun getAllUsers() : Unit {
-        val allItems = store.all()
-        println(allItems)
-    }
+//    @GetMapping("/all")
+//    fun getAllUsers() : Unit {
+//        val allItems = store.all()
+//        println(allItems)
+//    }
 }

@@ -19,8 +19,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.springframework.kafka:spring-kafka")
+	implementation("org.springframework.kafka:spring-kafka:2.6.0")
 	implementation("org.apache.kafka:kafka-streams:2.6.0")
+	implementation("org.apache.kafka:kafka-clients:2.6.0")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("io.github.microutils:kotlin-logging:2.0.3")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

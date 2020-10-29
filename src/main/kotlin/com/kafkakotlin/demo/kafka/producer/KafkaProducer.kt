@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class KafkaProducer(
-        private val kafkaTemplate: KafkaTemplate<Long, String>
+        private val kafkaTemplate: KafkaTemplate<String, String>
 ) {
 
     fun strikeMessageToKafka(payload: User) {
         println("striking the following payload to kafka:")
         println(payload)
-        kafkaTemplate.send("users", payload.toString())
+        kafkaTemplate.send("users-topic", "1",payload.toString())
   }
 }
