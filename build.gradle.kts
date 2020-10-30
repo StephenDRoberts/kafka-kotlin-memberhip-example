@@ -24,6 +24,7 @@ dependencies {
 	implementation("org.apache.kafka:kafka-clients:2.6.0")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("io.github.microutils:kotlin-logging:2.0.3")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
