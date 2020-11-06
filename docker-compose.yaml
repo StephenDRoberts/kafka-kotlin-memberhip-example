@@ -18,7 +18,7 @@ services:
     ports:
       - "9093:9093"
     environment:
-      KAFKA_CREATE_TOPICS: "users-topic:2:1, hashed-topic:2:1"
+      KAFKA_CREATE_TOPICS: "user-topic:2:1, hashed-topic:2:1"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
       KAFKA_PORT: "9092"

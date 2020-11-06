@@ -26,5 +26,5 @@ spring:
       application-id: "kafka-kotlin-membership"
       properties:
         "default.key.serde": org.apache.kafka.common.serialization.Serdes$StringSerde
-        "default.value.serde": org.apache.kafka.common.serialization.Serdes$IntegerSerde
-        "application.server": localhost:9093
+        "default.value.serde": org.apache.kafka.common.serialization.Serdes$StringSerde
+        "application.server": ${KAFKA_STREAM_APPLICATION_SERVER}

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/user")
 class UserController(
         val userService: UserService
-//        val store: ReadOnlyKeyValueStore<Any, Any>
 ) {
 
     @PostMapping
@@ -19,9 +18,8 @@ class UserController(
         return userService.createUser(user)
     }
 
-//    @GetMapping("/all")
-//    fun getAllUsers() : Unit {
-//        val allItems = store.all()
-//        println(allItems)
-//    }
+    @GetMapping("/all")
+    fun getAllUsers() : Map<String, User> {
+        return userService.getUsers()
+    }
 }

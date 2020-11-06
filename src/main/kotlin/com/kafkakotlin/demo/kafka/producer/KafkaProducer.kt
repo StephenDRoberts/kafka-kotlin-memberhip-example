@@ -14,7 +14,7 @@ class KafkaProducer(
     fun strikeMessageToKafka(payload: User) {
         println("striking the following payload to kafka:")
         println(payload)
-//        val key = UUID.randomUUID().toString()
-        kafkaTemplate.send("users-topic", "1", payload)
+        val key = UUID.randomUUID().toString()
+        kafkaTemplate.send("user-topic", key, payload)
   }
 }
