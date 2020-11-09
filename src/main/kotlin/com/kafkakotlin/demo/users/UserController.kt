@@ -1,11 +1,7 @@
 package com.kafkakotlin.demo.users
 
-import com.kafkakotlin.demo.metadata.RemoteAddress
 import mu.KLogging
-import org.apache.kafka.streams.state.KeyValueIterator
-import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -21,14 +17,14 @@ class UserController(
     }
 
     @GetMapping("/all")
-    fun getAllUsers() : List<Map<String, User>> {
+    fun getAllUsers() : Map<String, User> {
         return userService.getUsers()
     }
-//
-//    @GetMapping("/remote")
-//    fun getRemoteUsers() : List<Map<String, User>> {
-//        logger.info { "Remote Controller"}
-//        return userService.getRemoteUsers()
-//    }
+
+    @GetMapping("/remote")
+    fun getRemoteUsers() : Map<String, User> {
+        return userService.getRemoteUsers()
+    }
+
     companion object: KLogging()
 }

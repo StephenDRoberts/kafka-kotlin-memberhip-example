@@ -2,7 +2,6 @@ package com.kafkakotlin.demo.users
 
 import com.kafkakotlin.demo.kafka.`state-store-query`.StateStoreQuery
 import com.kafkakotlin.demo.kafka.producer.KafkaProducer
-import com.kafkakotlin.demo.metadata.RemoteAddress
 import mu.KLogging
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.state.KeyValueIterator
@@ -12,8 +11,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.kafka.config.StreamsBuilderFactoryBean
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.exchange
-import org.springframework.web.client.getForEntity
 
 @Component
 class UserRepository(
@@ -33,57 +30,44 @@ class UserRepository(
         return kafkaProducer.strikeMessageToKafka(user)
     }
 
-    fun getUsers(): List<Map<String, User>> {
+    fun getUsers(): Map<String, User> {
         val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
         val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
 
-        val userList = mutableListOf<Map<String, User>>()
+        val userList = mutableMapOf<String, User>()
 
-        for(entry in hostAndPortList) {
-
-            var activeHost = entry["host"]
-            var activePort = entry["port"]
-
-            logger.info { "Host: ${activeHost}" }
-            logger.info { "Port: ${activePort}" }
-            val isThisHost = activeHost == thisHost && activePort == thisPort
-
-            if (isThisHost) {
-                val items: KeyValueIterator<String, User> = store.getStore().all()
-                logger.info { "Local:" }
-                logger.info { items }
-                val bigDump = convertKeyValuesToMap(items)
-                logger.info { bigDump }
-
-                userList.add(bigDump)
-            } else {
-                logger.info { "Going Remote" }
-
-                userList.add(getRemoteUsers(activeHost, activePort).first())
-            }
+        val localUsers = getLocalUsers()
+        for(user in localUsers){
+            userList[user.key] = user.value
         }
-        logger.info { "Trying to return" }
+
+        val filteredHosts = hostAndPortList.filterNot { it -> it["host"] == thisHost && it["port"] == thisPort }
+
+        for(entry in filteredHosts) {
+            val remoteUsers = getRemoteUsers(entry["host"], entry["port"])
+            remoteUsers.map { (key, value) -> userList[key] = value }
+        }
         return userList
     }
 
-    fun getRemoteUsers(host: String?, port: String?): List<Map<String, User>>{
+    fun getLocalUsers(): Map<String, User> {
+        return convertKeyValuesToMap(store.getStore().all())
+    }
+
+    fun getRemoteUsers(host: String?, port: String?): Map<String, User>{
         val returnType = object : ParameterizedTypeReference<Map<String, User>>() {}
-        val remoteItems = restTemplate.exchange("http://$host:$port/user/all",
+        val remoteItems = restTemplate.exchange("http://$host:$port/user/remote",
                 HttpMethod.GET,
                 null,
                 returnType
         ).body
 
-        logger.info { "Remote: ${remoteItems?.javaClass?.name}" }
-        logger.info { "Remote Items: $remoteItems" }
-        return listOf(remoteItems ?: emptyMap())
+        return remoteItems ?: emptyMap()
     }
 
     private fun convertKeyValuesToMap(items: KeyValueIterator<String, User>): Map<String, User> {
         val localItemsMap = mutableMapOf<String, User>()
 
-        logger.info { "HasNext? ${items.hasNext()}" }
-        logger.info { items.toString() }
         while (items.hasNext()) {
             val keyValuePair = items.next()
             localItemsMap[keyValuePair.key] = keyValuePair.value
