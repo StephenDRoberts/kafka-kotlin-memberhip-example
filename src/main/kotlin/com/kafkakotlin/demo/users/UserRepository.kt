@@ -33,42 +33,57 @@ class UserRepository(
         return kafkaProducer.strikeMessageToKafka(user)
     }
 
-    fun getUsers(): Map<String, User> {
-        val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-table")
-        val activeHost = metadata.first().host()
-        val activePort = metadata.first().port()
+    fun getUsers(): List<Map<String, User>> {
+        val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
+        val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
 
-        val isThisHost = activeHost == thisHost && activePort == thisPort.toInt()
-        logger.info { "ActiveHost: ${activeHost}, activePort: ${activePort}" }
-        logger.info { "ThisHost? $isThisHost" }
+        val userList = mutableListOf<Map<String, User>>()
 
+        for(entry in hostAndPortList) {
 
-        return if(isThisHost){
-            val items: KeyValueIterator<String, User> = store.getStore().all()
+            var activeHost = entry["host"]
+            var activePort = entry["port"]
 
-            logger.info { "Local: ${items.javaClass.name}" }
-            val bigDump = convertKeyValuesToMap(items)
-            logger.info { bigDump }
-            bigDump
-        } else {
-            logger.info { RemoteAddress(activeHost, activePort) }
+            logger.info { "Host: ${activeHost}" }
+            logger.info { "Port: ${activePort}" }
+            val isThisHost = activeHost == thisHost && activePort == thisPort
 
-            val returnType = object: ParameterizedTypeReference<Map<String, User>>() {}
-            val remoteItems = restTemplate.exchange("http://$activeHost:$activePort/user/all",
-                    HttpMethod.GET,
-            null,
-                    returnType
-            ).body
+            if (isThisHost) {
+                val items: KeyValueIterator<String, User> = store.getStore().all()
+                logger.info { "Local:" }
+                logger.info { items }
+                val bigDump = convertKeyValuesToMap(items)
+                logger.info { bigDump }
 
-            logger.info { "Remote: ${remoteItems?.javaClass?.name}" }
-            logger.info { "Remote Items: $remoteItems" }
-            remoteItems ?: emptyMap()
+                userList.add(bigDump)
+            } else {
+                logger.info { "Going Remote" }
+
+                userList.add(getRemoteUsers(activeHost, activePort).first())
+            }
         }
+        logger.info { "Trying to return" }
+        return userList
+    }
+
+    fun getRemoteUsers(host: String?, port: String?): List<Map<String, User>>{
+        val returnType = object : ParameterizedTypeReference<Map<String, User>>() {}
+        val remoteItems = restTemplate.exchange("http://$host:$port/user/all",
+                HttpMethod.GET,
+                null,
+                returnType
+        ).body
+
+        logger.info { "Remote: ${remoteItems?.javaClass?.name}" }
+        logger.info { "Remote Items: $remoteItems" }
+        return listOf(remoteItems ?: emptyMap())
     }
 
     private fun convertKeyValuesToMap(items: KeyValueIterator<String, User>): Map<String, User> {
         val localItemsMap = mutableMapOf<String, User>()
 
+        logger.info { "HasNext? ${items.hasNext()}" }
+        logger.info { items.toString() }
         while (items.hasNext()) {
             val keyValuePair = items.next()
             localItemsMap[keyValuePair.key] = keyValuePair.value

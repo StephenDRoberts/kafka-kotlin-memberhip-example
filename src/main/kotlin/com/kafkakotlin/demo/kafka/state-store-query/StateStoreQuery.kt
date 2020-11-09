@@ -14,6 +14,6 @@ class StateStoreQuery(
     fun getStore(): ReadOnlyKeyValueStore<String, User>{
         return streamsBuilderFactoryBean
                 .kafkaStreams
-                .store(StoreQueryParameters.fromNameAndType("user-table", QueryableStoreTypes.keyValueStore<String, User>()))
+                .store(StoreQueryParameters.fromNameAndType("user-store", QueryableStoreTypes.keyValueStore<String, User>()))
     }
 }

@@ -13,8 +13,11 @@ class UserService(
         return userRepository.createUser(user)
     }
 
-    fun getUsers(): Map<String, User> {
+    fun getUsers(): List<Map<String, User>> {
         return userRepository.getUsers()
     }
-
+//
+//    fun getRemoteUsers(): List<Map<String, User>> {
+//        return userRepository.getRemoteUsers()
+//    }
 }
