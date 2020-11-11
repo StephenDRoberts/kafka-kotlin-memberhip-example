@@ -7,24 +7,24 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/user")
 class UserController(
-        val userService: UserService
+    val userService: UserService
 ) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    fun createUser(@RequestBody user: User): Unit {
+    fun createUser(@RequestBody user: User) {
         return userService.createUser(user)
     }
 
     @GetMapping("/all")
-    fun getAllUsers() : Map<String, User> {
+    fun getAllUsers(): Map<String, User> {
         return userService.getUsers()
     }
 
     @GetMapping("/remote")
-    fun getRemoteUsers() : Map<String, User> {
+    fun getRemoteUsers(): Map<String, User> {
         return userService.getRemoteUsers()
     }
 
-    companion object: KLogging()
+    companion object : KLogging()
 }

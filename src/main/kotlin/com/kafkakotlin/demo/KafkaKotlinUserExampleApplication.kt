@@ -11,5 +11,5 @@ import org.springframework.kafka.annotation.EnableKafkaStreams
 class KafkaKotlinUserExampleApplication
 
 fun main(args: Array<String>) {
-	runApplication<KafkaKotlinUserExampleApplication>(*args)
+    runApplication<KafkaKotlinUserExampleApplication>(*args)
 }

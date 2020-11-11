@@ -1,15 +1,15 @@
-//package com.kafkakotlin.demo.users
+// package com.kafkakotlin.demo.users
 //
-//import com.kafkakotlin.demo.kafka.producer.KafkaProducer
-//import io.mockk.*
-//import org.junit.jupiter.api.Assertions
-//import org.junit.jupiter.api.Assertions.assertEquals
-//import org.junit.jupiter.api.DisplayName
-//import org.junit.jupiter.api.Test
-//import org.springframework.http.ResponseEntity
+// import com.kafkakotlin.demo.kafka.producer.KafkaProducer
+// import io.mockk.*
+// import org.junit.jupiter.api.Assertions
+// import org.junit.jupiter.api.Assertions.assertEquals
+// import org.junit.jupiter.api.DisplayName
+// import org.junit.jupiter.api.Test
+// import org.springframework.http.ResponseEntity
 //
-//@DisplayName("User Service Tests")
-//internal class UserServiceTest {
+// @DisplayName("User Service Tests")
+// internal class UserServiceTest {
 //    private val userRepository = mockk<UserRepository>()
 //    private val kafkaProducer = mockk<KafkaProducer>()
 //    private val underTest = UserRepository(kafkaProducer)
@@ -30,4 +30,4 @@
 //        assertEquals(dummyUser, userSlot.captured)
 //    }
 //
-//}
+// }

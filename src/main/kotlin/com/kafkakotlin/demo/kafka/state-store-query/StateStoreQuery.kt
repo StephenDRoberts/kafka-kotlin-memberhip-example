@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class StateStoreQuery(
-        private val streamsBuilderFactoryBean: StreamsBuilderFactoryBean
+    private val streamsBuilderFactoryBean: StreamsBuilderFactoryBean
 ) {
-    fun getStore(): ReadOnlyKeyValueStore<String, User>{
+    fun getStore(): ReadOnlyKeyValueStore<String, User> {
         return streamsBuilderFactoryBean
-                .kafkaStreams
-                .store(StoreQueryParameters.fromNameAndType("user-store", QueryableStoreTypes.keyValueStore<String, User>()))
+            .kafkaStreams
+            .store(StoreQueryParameters.fromNameAndType("user-store", QueryableStoreTypes.keyValueStore<String, User>()))
     }
 }
