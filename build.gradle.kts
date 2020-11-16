@@ -31,6 +31,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("io.mockk:mockk:1.10.2")
     testImplementation("org.apache.kafka:kafka-streams-test-utils:2.6.0")
+    testImplementation("org.springframework.kafka:spring-kafka-test:2.6.3")
+
 }
 
 tasks.withType<Test> {
