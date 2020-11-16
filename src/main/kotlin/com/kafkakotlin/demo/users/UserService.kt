@@ -1,15 +1,21 @@
 package com.kafkakotlin.demo.users
 
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-        val userRepository: UserRepository
+    val userRepository: UserRepository
 ) {
 
-    fun createUser(user: User): Unit {
+    fun createUser(user: User) {
         return userRepository.createUser(user)
     }
 
+    fun getUsers(): Map<String, User> {
+        return userRepository.getUsers()
+    }
+
+    fun getRemoteUsers(): Map<String, User> {
+        return userRepository.getLocalUsers()
+    }
 }

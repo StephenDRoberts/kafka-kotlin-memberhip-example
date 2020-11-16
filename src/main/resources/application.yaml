@@ -1,8 +1,9 @@
 spring:
   kafka:
+    bootstrap-servers: localhost:9093
     consumer:
       # Host + Port Kafka is running on
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:9093
       # The "group" your application belongs to, if you have two instances of your app running, theyd have the same group-id, so Kafka knows its the same app.
       group-id: "kafka-kotlin-membership"
       # If your app subscribes to a brand new topic its never seen before, where does it start ingesting messages from. earliest = first message, latest = last
@@ -16,8 +17,14 @@ spring:
         "spring.json.trusted.packages": "com.examples.kafkakotlin.demo"
     producer:
       # Host + Port Kafka is running on
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:9093
       # default class that your app will use to serialize the Keys of Kafka Messages
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       # default class that your app will use to serialize the Values of Kafka Messages
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    streams:
+      application-id: "kafka-kotlin-membership"
+      properties:
+        "default.key.serde": org.apache.kafka.common.serialization.Serdes$StringSerde
+        "default.value.serde": org.apache.kafka.common.serialization.Serdes$StringSerde
+        "application.server": ${KAFKA_STREAM_APPLICATION_SERVER}
