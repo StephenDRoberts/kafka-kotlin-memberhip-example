@@ -1,3 +1,5 @@
+server:
+  port: 8087
 spring:
   kafka:
     bootstrap-servers: localhost:9093
@@ -27,4 +29,4 @@ spring:
       properties:
         "default.key.serde": org.apache.kafka.common.serialization.Serdes$StringSerde
         "default.value.serde": org.apache.kafka.common.serialization.Serdes$StringSerde
-        "application.server": ${KAFKA_STREAM_APPLICATION_SERVER}
+        "application.server": localhost:8087

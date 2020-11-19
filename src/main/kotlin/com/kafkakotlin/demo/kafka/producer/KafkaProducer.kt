@@ -11,6 +11,8 @@ class KafkaProducer(
 ) {
 
     fun strikeMessageToKafka(payload: User) {
+        println("****In the proper code!!!****")
+        println(payload)
         val key = UUID.randomUUID().toString()
         kafkaTemplate.send("user-topic", key, payload)
     }

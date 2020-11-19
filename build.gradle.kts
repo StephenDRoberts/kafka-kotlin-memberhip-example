@@ -20,22 +20,17 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-    implementation("org.springframework.kafka:spring-kafka:2.6.3")
-    implementation("org.apache.kafka:kafka-streams:2.6.0")
-    implementation("org.apache.kafka:kafka-clients:2.6.0")
-
+    implementation("org.springframework.kafka:spring-kafka:2.5.1.RELEASE")
+    implementation("org.apache.kafka:kafka-streams:2.5.1")
+    implementation("org.apache.kafka:kafka-clients:2.5.1")
     implementation("io.github.microutils:kotlin-logging:2.0.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("io.mockk:mockk:1.10.2")
-    testImplementation("org.springframework.kafka:spring-kafka-test:2.6.3"){
-        exclude(group = "org.apache.kafka", module = "kafka_2.11")
-    }
+    testImplementation("org.springframework.kafka:spring-kafka-test:2.5.1.RELEASE")
 }
 
 tasks.withType<Test> {
