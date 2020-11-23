@@ -1,4 +1,4 @@
-package com.kafkakotlin.demo.kafka.topology
+package com.kafkakotlin.demo.kafka.usertopology
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.kafkakotlin.demo.users.User
@@ -10,7 +10,7 @@ import org.apache.kafka.streams.TestInputTopic
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

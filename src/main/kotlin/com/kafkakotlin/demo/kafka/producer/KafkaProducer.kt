@@ -1,7 +1,7 @@
 package com.kafkakotlin.demo.kafka.producer
 
 import com.kafkakotlin.demo.users.User
-import java.util.*
+import java.util.UUID
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 

@@ -1,4 +1,4 @@
-package com.kafkakotlin.demo.kafka.topology
+package com.kafkakotlin.demo.kafka.usertopology
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue

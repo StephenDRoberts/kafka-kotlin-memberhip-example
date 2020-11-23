@@ -1,4 +1,4 @@
-package com.kafkakotlin.demo.restTemplate
+package com.kafkakotlin.demo.restConfig
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

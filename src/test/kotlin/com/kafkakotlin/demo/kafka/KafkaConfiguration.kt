@@ -1,33 +1,33 @@
-//package com.kafkakotlin.demo.kafka
+// package com.kafkakotlin.demo.kafka
 //
-//import mu.KotlinLogging
-//import org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG
-//import org.apache.kafka.clients.consumer.ConsumerConfig
-//import org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
-//import org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG
-//import org.apache.kafka.clients.producer.ProducerConfig
-//import org.apache.kafka.common.serialization.ByteArrayDeserializer
-//import org.apache.kafka.common.serialization.StringDeserializer
-//import org.apache.kafka.common.serialization.StringSerializer
-//import org.springframework.beans.factory.annotation.Value
-//import org.springframework.context.annotation.Bean
-//import org.springframework.context.annotation.Configuration
-//import org.springframework.kafka.annotation.EnableKafka
-//import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
-//import org.springframework.kafka.config.KafkaListenerContainerFactory
-//import org.springframework.kafka.core.DefaultKafkaConsumerFactory
-//import org.springframework.kafka.core.DefaultKafkaProducerFactory
-//import org.springframework.kafka.core.KafkaTemplate
-//import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
+// import mu.KotlinLogging
+// import org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG
+// import org.apache.kafka.clients.consumer.ConsumerConfig
+// import org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
+// import org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG
+// import org.apache.kafka.clients.producer.ProducerConfig
+// import org.apache.kafka.common.serialization.ByteArrayDeserializer
+// import org.apache.kafka.common.serialization.StringDeserializer
+// import org.apache.kafka.common.serialization.StringSerializer
+// import org.springframework.beans.factory.annotation.Value
+// import org.springframework.context.annotation.Bean
+// import org.springframework.context.annotation.Configuration
+// import org.springframework.kafka.annotation.EnableKafka
+// import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
+// import org.springframework.kafka.config.KafkaListenerContainerFactory
+// import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+// import org.springframework.kafka.core.DefaultKafkaProducerFactory
+// import org.springframework.kafka.core.KafkaTemplate
+// import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
 //
-//private val logger = KotlinLogging.logger { }
+// private val logger = KotlinLogging.logger { }
 //
-//@Configuration
-//@EnableKafka
-//class KafkaConfiguration(
+// @Configuration
+// @EnableKafka
+// class KafkaConfiguration(
 //        @Value("\${kafka.bootstrap-servers}")
 //        private val bootstrapServers: String
-//) {
+// ) {
 //
 //    private val sharedProperties: Map<String, Any> = mapOf(
 //            "request.timeout.ms" to "10000"
@@ -71,4 +71,4 @@
 //                )
 //        )
 //    }
-//}
+// }
