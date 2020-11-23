@@ -1,4 +1,4 @@
-package com.kafkakotlin.demo.kafka.`state-store-query`
+package com.kafkakotlin.demo.kafka.statestorequery
 
 import com.kafkakotlin.demo.users.User
 import org.apache.kafka.streams.StoreQueryParameters

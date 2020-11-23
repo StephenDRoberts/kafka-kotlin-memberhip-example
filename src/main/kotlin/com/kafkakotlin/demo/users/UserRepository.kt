@@ -1,6 +1,6 @@
 package com.kafkakotlin.demo.users
 
-import com.kafkakotlin.demo.kafka.`state-store-query`.StateStoreQuery
+import com.kafkakotlin.demo.kafka.statestorequery.StateStoreQuery
 import com.kafkakotlin.demo.kafka.producer.KafkaProducer
 import mu.KLogging
 import org.apache.kafka.streams.StreamsConfig
