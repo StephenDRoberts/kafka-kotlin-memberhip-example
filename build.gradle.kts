@@ -16,15 +16,25 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    // Kafka
     implementation("org.springframework.kafka:spring-kafka:2.5.1.RELEASE")
     implementation("org.apache.kafka:kafka-streams:2.5.1")
     implementation("org.apache.kafka:kafka-clients:2.5.1")
+
+    // Other
     implementation("io.github.microutils:kotlin-logging:2.0.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.google.guava:guava:20.0")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }

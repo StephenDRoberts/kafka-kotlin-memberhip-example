@@ -2,6 +2,7 @@ package com.kafkakotlin.demo.kafka.usertopology
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.common.hash.Hashing
 import com.kafkakotlin.demo.users.User
 import mu.KLogging
 import org.apache.kafka.common.serialization.Serdes
@@ -11,6 +12,7 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.state.Stores
 import org.springframework.stereotype.Component
+import java.nio.charset.StandardCharsets
 
 @Component
 class UserTopology(
@@ -31,7 +33,12 @@ class UserTopology(
         )
 
         builder.stream("user-topic", Consumed.with(stringSerde, userSerde))
-            .map { key, value -> KeyValue(key, value) }
+            .map { key, value ->
+                val username = value.username
+                val email = value.email
+                val hashedPassword = Hashing.sha256().hashString(value.password, StandardCharsets.UTF_8).toString()
+
+                KeyValue(key, User(username, email, hashedPassword)) }
             .toTable(
                 Materialized.`as`<String, User>(Stores.inMemoryKeyValueStore("user-store"))
                     .withKeySerde(stringSerde)
