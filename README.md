@@ -13,8 +13,7 @@ Users will create a username, email and password with details being placed onto 
 
 ### Architecture
 
-![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/ArchitectureDiagram.png
-?raw=true)
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/ArchitectureDiagram.png?raw=true)
 
 
 
