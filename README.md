@@ -10,6 +10,14 @@ Users will create a username, email and password with details being placed onto 
 * [Docker](https://www.docker.com/)
 * [Spring](https://spring.io/)
 * [JUnit](https://junit.org/junit5/)
+
+### Architecture
+
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/ArchitectureDiagram.png
+?raw=true)
+
+
+
 ### Notes:
 #### Creating a POST endpoint
 * Needed to add a REST Controller Spring annotation which didn't come with my default package. Imported spring-boot-web-starter into my dependencies.
