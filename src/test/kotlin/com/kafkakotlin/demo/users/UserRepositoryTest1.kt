@@ -19,14 +19,12 @@ internal class UserRepositoryTest {
     private val restTemplate = mockk<RestTemplate>()
     private val kafkaProperties = mockk<KafkaProperties>()
 
-    private val kafkaStreams = mockk<KafkaStreams>()
     private val properties = mapOf("application.server" to "localhost:9999")
 
     private lateinit var underTest: UserRepository
 
     @BeforeEach
     fun setup(){
-//        every { streamsBuilderFactoryBean.kafkaStreams } returns kafkaStreams
         every { kafkaProperties.streams.properties } returns properties
 
         underTest = UserRepository(kafkaProducer, store, streamsBuilderFactoryBean, restTemplate, kafkaProperties)
