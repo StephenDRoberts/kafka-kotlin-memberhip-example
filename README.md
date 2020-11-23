@@ -15,7 +15,34 @@ Users will create a username, email and password with details being placed onto 
 
 ![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/blob/master/ArchitectureDiagram.png?raw=true)
 
+#### User Controller
+* Directs requests to the corresponding function within UserService/UserRepository.
+* Handles requests by using [Spring's RequestMapping annotation](https://www.baeldung.com/spring-new-requestmapping-shortcuts).
 
+#### User Service
+* Just a pass through...
+
+#### User Repository
+* Handles the creation os new users, utilising the KafkaProducer and the retrieval of users from the state-store (see further information below on handling retrival from a distributed system).
+
+#### KafkaProducer
+* Receives a User object to put into the state store.
+* Assigns a new UUID for the user and uses Spring Kafkas high level language [KafkaTemplate](https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/KafkaTemplate.html) to send our User item to the "user-topic".
+* NB: The "user-topic" is created from the [docker-compose file](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/blob/master/docker-compose.yaml).
+
+#### User Topology
+* This is the main Kakfa streams file for manipulating the data read from the "user-topic" and sent to the state store. 
+* The topology reads from a given topic, manipulates some data within Kafka Streams and then sends the manipulated data to an in-memory state store.
+* The topology uses the [StreamBuilder](https://kafka.apache.org/23/javadoc/org/apache/kafka/streams/StreamsBuilder.html) high level Kafka Streams DSL to create a Stream.
+* The name of the topic you wish to read from is provided to the `stream()` method, along with serialisation configuration.
+* We have then instructed the stream to manipulate each record it receives to hash the user pasword within a `map()` function.
+* Finally we store the KeyValue pair created to a KTable. We use the ``Materialized.as` notation to create a new inMemoryKeyValueStore and provide it with serialisation configuration for storage.
+ 
+#### State store query
+* This component is responsible for providin a local state store and being able to query its data.
+* It utilises the [StreamBuilderFactoryBean](https://docs.spring.io/spring-kafka/docs/current/api/org/springframework/kafka/config/StreamsBuilderFactoryBean.html) that gives more control over the Kafka Streams instance.
+* We use the `kafkaStreams.store()` methods and provide in `StoreQueryParameters` with the required state store name and types that the data is store in.
+* The state store query is called from within the UserRepository component. In that component we call `store.getStore().all()` to request all items back from the state store.
 
 ### Notes:
 #### Creating a POST endpoint
@@ -29,3 +56,8 @@ Users will create a username, email and password with details being placed onto 
   2. Proxy to a remote address for the users stored in remote partitions.
 
 * To implement this we first query the local store for its items. Then filter out the host & port combination that we've just used. For each host/port left in the metadata for assigned applications, we proxy a request using `restTemplate.exchange()` which fetches local items to that state store/application.
+
+#### Conflicting dependencies
+Throughout the project I had issues with conflicting dependencies and getting errors such as `NoSuchMethodError` and `NoSuchClassError`. To get passed these issues we needed to run `./gradlew dependencies` to get a list of dependencies that we are bringing in. In some cases there would be a clash and an older version would take precedence. In these instances we have tried to exclude some of the older dependencies and directly import the later version. However, Kafka-clients would not work correctly and so we had to downgrade to v2.5.1, in particular given the following error message:
+```java.lang.NoSuchMethodError: 'org.apache.kafka.common.requests.MetadataResponse org.apache.kafka.common.requests.MetadataResponse.prepareResponse(int, java.util.Collection, java.lang.String, int, java.util.List, int)'
+	at ```
