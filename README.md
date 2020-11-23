@@ -36,7 +36,7 @@ Users will create a username, email and password with details being placed onto 
 * The topology uses the [StreamBuilder](https://kafka.apache.org/23/javadoc/org/apache/kafka/streams/StreamsBuilder.html) high level Kafka Streams DSL to create a Stream.
 * The name of the topic you wish to read from is provided to the `stream()` method, along with serialisation configuration.
 * We have then instructed the stream to manipulate each record it receives to hash the user pasword within a `map()` function.
-* Finally we store the KeyValue pair created to a KTable. We use the ``Materialized.as` notation to create a new inMemoryKeyValueStore and provide it with serialisation configuration for storage.
+* Finally we store the KeyValue pair created to a KTable. We use the `Materialized.as` notation to create a new inMemoryKeyValueStore and provide it with serialisation configuration for storage.
  
 #### State store query
 * This component is responsible for providin a local state store and being able to query its data.
@@ -59,5 +59,6 @@ Users will create a username, email and password with details being placed onto 
 
 #### Conflicting dependencies
 Throughout the project I had issues with conflicting dependencies and getting errors such as `NoSuchMethodError` and `NoSuchClassError`. To get passed these issues we needed to run `./gradlew dependencies` to get a list of dependencies that we are bringing in. In some cases there would be a clash and an older version would take precedence. In these instances we have tried to exclude some of the older dependencies and directly import the later version. However, Kafka-clients would not work correctly and so we had to downgrade to v2.5.1, in particular given the following error message:
-```java.lang.NoSuchMethodError: 'org.apache.kafka.common.requests.MetadataResponse org.apache.kafka.common.requests.MetadataResponse.prepareResponse(int, java.util.Collection, java.lang.String, int, java.util.List, int)'
-	at ```
+```
+java.lang.NoSuchMethodError: 'org.apache.kafka.common.requests.MetadataResponse org.apache.kafka.common.requests.MetadataResponse.prepareResponse(int, java.util.Collection, java.lang.String, int, java.util.List, int)'
+```
