@@ -13,7 +13,7 @@ Users will create a username, email and password with details being placed onto 
 
 ### Architecture
 
-![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/assets/blob/master/ArchitectureDiagram.png?raw=true)
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/blob/master/assets/ArchitectureDiagram.png?raw=true)
 
 #### User Controller
 * Directs requests to the corresponding function within UserService/UserRepository.
@@ -51,11 +51,11 @@ Users will create a username, email and password with details being placed onto 
 #### Getting all users over a distributed system
 * The current setup for kafka is for the data to be split over 2 partitions. If only one application ran then it would be assigned to both partitions, meaning that when we requested to get all users then it would query both partitions. 
 
-![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/assets/blob/master/OneAppDiagram.png?raw=true)
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/blob/master/assets/OneAppDiagram.png?raw=true)
 
 * However, having two applications running, one partition would be assigned to one application. This means that if we requested to get all items from one application, we would only receive the items contained in the partition assinged to it.
 
-![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/assets/blob/master/TwoAppDiagram.png?raw=true)
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/blob/master/assets/TwoAppDiagram.png?raw=true)
 
 * To get around this issue, we have split our GET request into two sections:
   1. Get local users by querying the current applications state store within its assigned partition;
