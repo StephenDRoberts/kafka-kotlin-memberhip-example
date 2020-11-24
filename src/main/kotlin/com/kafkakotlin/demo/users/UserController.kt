@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 class UserController(
     val userService: UserService
 ) {
@@ -21,14 +21,14 @@ class UserController(
         return userService.createUser(user)
     }
 
-    @GetMapping("/all")
+    @GetMapping
     fun getAllUsers(): Map<String, User> {
         return userService.getUsers()
     }
 
     @GetMapping("/remote")
-    fun getRemoteUsers(): Map<String, User> {
-        return userService.getRemoteUsers()
+    fun getProxiedLocalUsers(): Map<String, User> {
+        return userService.getProxiedLocalUsers()
     }
 
     companion object : KLogging()

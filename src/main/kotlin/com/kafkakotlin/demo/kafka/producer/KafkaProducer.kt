@@ -10,7 +10,7 @@ class KafkaProducer(
     private val kafkaTemplate: KafkaTemplate<String, User>
 ) {
 
-    fun strikeMessageToKafka(payload: User) {
+    fun publishMessageToKafka(payload: User) {
         val key = UUID.randomUUID().toString()
         kafkaTemplate.send("user-topic", key, payload)
     }

@@ -42,7 +42,7 @@ internal class UserRepositoryTest {
     fun `should pass given User to kafkaProducer when creating a user`() {
         val slot = slot<User>()
 
-        every { kafkaProducer.strikeMessageToKafka(capture(slot)) } just runs
+        every { kafkaProducer.publishMessageToKafka(capture(slot)) } just runs
         underTest.createUser(testUser)
 
         assertThat(testUser).isEqualTo(slot.captured)
@@ -70,6 +70,9 @@ internal class UserRepositoryTest {
             every { restTemplate.exchange(any<String>(), any(), null, returnType).body } returns mapOf("1" to testUser)
 
             val remoteUsers = underTest.getRemoteUsers("localhost", "9099")
+//                    .javaClass.getDeclaredMethod("getRemoteUsers", String::class.java)
+
+//
 
             assertThat(remoteUsers["1"]).isEqualTo(testUser)
         }

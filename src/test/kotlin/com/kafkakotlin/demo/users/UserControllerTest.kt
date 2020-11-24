@@ -4,8 +4,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import io.mockk.slot
-import org.junit.jupiter.api.Assertions.assertEquals
+import io.mockk.verify
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -22,11 +21,10 @@ internal class UserControllerTest {
 
     @Test
     fun `should call the UserService with the correct parameters`() {
-        val userSlot = slot<User>()
-        every { userService.createUser(capture(userSlot)) } just runs
+        every { userService.createUser(any()) } just runs
 
-        userService.createUser(dummyUser)
+        underTest.createUser(dummyUser)
 
-        assertEquals(dummyUser, userSlot.captured)
+        verify { userService.createUser(dummyUser) }
     }
 }

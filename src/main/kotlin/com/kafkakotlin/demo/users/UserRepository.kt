@@ -27,7 +27,7 @@ class UserRepository(
     private val thisPort = applicationServer[1]
 
     fun createUser(user: User) {
-        return kafkaProducer.strikeMessageToKafka(user)
+        return kafkaProducer.publishMessageToKafka(user)
     }
 
     fun getUsers(): Map<String, User> {
@@ -44,7 +44,7 @@ class UserRepository(
         val filteredHosts = hostAndPortList.filterNot { it -> it["host"] == thisHost && it["port"] == thisPort }
 
         for (entry in filteredHosts) {
-            val remoteUsers = getRemoteUsers(entry["host"], entry["port"])
+            val remoteUsers = getRemoteUsers(entry["host"] as String, entry["port"] as String)
             remoteUsers.map { (key, value) -> userList[key] = value }
         }
         return userList
@@ -54,10 +54,10 @@ class UserRepository(
         return convertKeyValuesToMap(store.getStore().all())
     }
 
-    fun getRemoteUsers(host: String?, port: String?): Map<String, User> {
+    fun getRemoteUsers(host: String, port: String): Map<String, User> {
         val returnType = object : ParameterizedTypeReference<Map<String, User>>() {}
         val remoteItems = restTemplate.exchange(
-            "http://$host:$port/user/remote",
+            "http://$host:$port/users/remote",
             HttpMethod.GET,
             null,
             returnType
