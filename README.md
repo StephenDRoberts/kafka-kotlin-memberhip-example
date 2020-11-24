@@ -1,8 +1,8 @@
 # Demo membership app with Kafka, Kotlin and Docker
 
-Simple example application that allows users to sign up to the site.
+Simple example application that allows users to sign up to a kafka driven application.
 
-Users will create a username, email and password with details being placed onto a kafka topic. A kafka streams processor will subscribe to that topic, hash the passowrd and store the details to a state store. A GET enpoint will be available for a user to get a full list of users who have signed up to the application.
+Users will create a username, email and password with details being placed onto a kafka topic. A kafka streams processor will subscribe to that topic, hash the password and store the details to a state store. A GET enpoint will be available for a user to get a full list of users who have signed up to the application.
 
 ### Technologies used:
 * [Kafka](https://kafka.apache.org/intro)
@@ -23,7 +23,7 @@ Users will create a username, email and password with details being placed onto 
 * Just a pass through...
 
 #### User Repository
-* Handles the creation os new users, utilising the KafkaProducer and the retrieval of users from the state-store (see further information below on handling retrival from a distributed system).
+* Handles the creation of new users, utilising the KafkaProducer and the retrieval of users from the state-store (see further information below on handling retrival from a distributed system).
 
 #### KafkaProducer
 * Receives a User object to put into the state store.
@@ -39,12 +39,24 @@ Users will create a username, email and password with details being placed onto 
 * Finally we store the KeyValue pair created to a KTable. We use the `Materialized.as` notation to create a new inMemoryKeyValueStore and provide it with serialisation configuration for storage.
  
 #### State store query
-* This component is responsible for providin a local state store and being able to query its data.
+* This component is responsible for providing a local state store and being able to query its data.
 * It utilises the [StreamBuilderFactoryBean](https://docs.spring.io/spring-kafka/docs/current/api/org/springframework/kafka/config/StreamsBuilderFactoryBean.html) that gives more control over the Kafka Streams instance.
-* We use the `kafkaStreams.store()` methods and provide in `StoreQueryParameters` with the required state store name and types that the data is store in.
+* We use the `kafkaStreams.store()` methods and provide in `StoreQueryParameters` with the required state store name and types that the data is stored in.
 * The state store query is called from within the UserRepository component. In that component we call `store.getStore().all()` to request all items back from the state store.
 
 ### Notes:
+* To set up kafka, run `docker-compose up` from the main project directory.
+* The app is set up to run on ports 8080 and 8087. You can run the applications using intellij's run button, or with a command such a `./gradlew bootRun`.
+* To create a user, send a message to http://localhost:<port number>/user/all in the following format:
+```
+{
+username: `String`,
+email: `String`,
+password: `String`
+}
+```
+
+
 #### Creating a POST endpoint
 * Needed to add a REST Controller Spring annotation which didn't come with my default package. Imported spring-boot-web-starter into my dependencies.
 
