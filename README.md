@@ -47,14 +47,15 @@ Users will create a username, email and password with details being placed onto 
 ### Notes:
 * To set up kafka, run `docker-compose up` from the main project directory.
 * The app is set up to run on ports 8080 and 8087. You can run the applications using intellij's run button, or with a command such a `./gradlew bootRun`.
-* To create a user, send a message to http://localhost:<port number>/user/all in the following format:
+* To create a user, send a POST request to `http://localhost:<port number>/user` in the following format:
 ```
 {
-username: `String`,
-email: `String`,
-password: `String`
+  username: String,
+  email: String,
+  password: String
 }
 ```
+* To query for a list of users, send a GET request to `http://localhost:<port number>/user/all`
 
 
 #### Creating a POST endpoint
