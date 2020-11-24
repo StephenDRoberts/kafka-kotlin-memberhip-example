@@ -50,7 +50,13 @@ Users will create a username, email and password with details being placed onto 
 
 #### Getting all users over a distributed system
 * The current setup for kafka is for the data to be split over 2 partitions. If only one application ran then it would be assigned to both partitions, meaning that when we requested to get all users then it would query both partitions. 
+
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/OneAppDiagram/blob/master/ArchitectureDiagram.png?raw=true)
+
 * However, having two applications running, one partition would be assigned to one application. This means that if we requested to get all items from one application, we would only receive the items contained in the partition assinged to it.
+
+![alt text](https://github.com/StephenDRoberts/kafka-kotlin-memberhip-example/TwoAppDiagram/blob/master/ArchitectureDiagram.png?raw=true)
+
 * To get around this issue, we have split our GET request into two sections:
   1. Get local users by querying the current applications state store within its assigned partition;
   2. Proxy to a remote address for the users stored in remote partitions.
@@ -62,3 +68,15 @@ Throughout the project I had issues with conflicting dependencies and getting er
 ```
 java.lang.NoSuchMethodError: 'org.apache.kafka.common.requests.MetadataResponse org.apache.kafka.common.requests.MetadataResponse.prepareResponse(int, java.util.Collection, java.lang.String, int, java.util.List, int)'
 ```
+
+### Testing
+#### User Topology Tests
+* User Topology test uses a [TopologyTestDriver](https://kafka.apache.org/24/javadoc/org/apache/kafka/streams/TopologyTestDriver.html).
+* The test driver creates our topologu. We specify a test topic that we can "pipe" messages to, as well as a state store to read values from.
+
+#### Kafka Producer Tests
+* Kafka Producer tests use Spring [Embedded Kafka annotation](https://docs.spring.io/spring-kafka/api/org/springframework/kafka/test/context/EmbeddedKafka.html) to run a lightweight version of kafka for testing.
+* Our tests largely follow those from [Springs example](https://docs.spring.io/spring-kafka/reference/html/#embedded-kafka-annotation). We need to provide an [Embedded Kafka Broker](https://docs.spring.io/spring-kafka/api/org/springframework/kafka/test/EmbeddedKafkaBroker.html) to [Kafka Test Utils](https://docs.spring.io/spring-kafka/api/org/springframework/kafka/test/utils/KafkaTestUtils.html).
+* From there we can set up a Consumer  with some Deserialisation tools for storing messages and then tell our Embedded Kafka Broker to read from a specified topic.
+* Now we can strike messages to our kafka broker.
+* When retrieving messages using Kafka Test Utils, we can't just send multiple messages and use the `getRecords()` function without any parameters. Otherwise this will just pass us back the first message that was sent to kafka rather than all. To avoid this issue, we pass in a `minRecords` parameter and a timeout to try to ensure that we are getting all records back.
