@@ -1,6 +1,5 @@
 package com.kafkakotlin.demo.kafka.producer
 
-// import com.kafkakotlin.demo.kafka.KafkaConfiguration
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
