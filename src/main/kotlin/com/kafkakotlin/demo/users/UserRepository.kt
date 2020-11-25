@@ -4,6 +4,7 @@ import com.kafkakotlin.demo.kafka.producer.KafkaProducer
 import com.kafkakotlin.demo.kafka.statestorequery.StateStoreQuery
 import mu.KLogging
 import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.errors.InvalidStateStoreException
 import org.apache.kafka.streams.state.KeyValueIterator
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.core.ParameterizedTypeReference
@@ -30,6 +31,16 @@ class UserRepository(
         return kafkaProducer.publishMessageToKafka(user)
     }
 
+    fun getByUsername(username: String) {
+        val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
+        val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
+        val userDetails = mutableMapOf<String, User>()
+
+        val localUsers = store.getStore().get(username)
+        println(localUsers)
+
+    }
+
     fun getUsers(): Map<String, User> {
         val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
         val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
@@ -51,7 +62,16 @@ class UserRepository(
     }
 
     fun getLocalUsers(): Map<String, User> {
-        return convertKeyValuesToMap(store.getStore().all())
+        while (true) {
+            try {
+                val stateStore =  store.getStore();
+                return convertKeyValuesToMap(stateStore.all())
+            } catch (e: InvalidStateStoreException) {
+                // store not yet ready for querying
+                println("retrying...")
+                Thread.sleep(100);
+            }
+        }
     }
 
     fun getRemoteUsers(host: String, port: String): Map<String, User> {

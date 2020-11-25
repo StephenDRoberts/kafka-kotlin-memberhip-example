@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1, topics = ["user-topic"], bootstrapServersProperty = "spring.kafka.bootstrap-servers", brokerProperties = ["listeners=PLAINTEXT://localhost:9093", "port=9093"])
-@ExtendWith(SpringExtension::class)
+//@ExtendWith(SpringExtension::class)
 internal class KafkaProducerTest() {
     private val objectMapper = jacksonObjectMapper()
 
