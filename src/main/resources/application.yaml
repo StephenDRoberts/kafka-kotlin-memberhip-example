@@ -4,25 +4,16 @@ spring:
   kafka:
     bootstrap-servers: localhost:9093
     consumer:
-      # Host + Port Kafka is running on
       bootstrap-servers: localhost:9093
-      # The "group" your application belongs to, if you have two instances of your app running, theyd have the same group-id, so Kafka knows its the same app.
       group-id: "kafka-kotlin-membership"
-      # If your app subscribes to a brand new topic its never seen before, where does it start ingesting messages from. earliest = first message, latest = last
       auto-offset-reset: earliest
-      # default class that your app will use to deserialize the Keys of Kafka Messages
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      # default class that your app will use to deserialize the Values of Kafka Messages
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        # Some annoying extra property thats required for security reasons. Change it to the package where your kafka models live. It stops your app ingesting any old message which I guess could be a security issue?
         "spring.json.trusted.packages": "com.examples.kafkakotlin.demo"
     producer:
-      # Host + Port Kafka is running on
       bootstrap-servers: localhost:9093
-      # default class that your app will use to serialize the Keys of Kafka Messages
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      # default class that your app will use to serialize the Values of Kafka Messages
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     streams:
       application-id: "kafka-kotlin-membership"

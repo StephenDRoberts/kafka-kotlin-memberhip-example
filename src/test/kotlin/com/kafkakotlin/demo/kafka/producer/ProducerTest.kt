@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 class ProducerTest {
 
-//    TODO setup kafka prodcuer test like CMS
+//    TODO setup kafka producer test like with custom consumer/producer
     @Test
     fun `runs`() {
     }
