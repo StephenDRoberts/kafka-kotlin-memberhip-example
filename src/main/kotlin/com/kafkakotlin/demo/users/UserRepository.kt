@@ -41,15 +41,14 @@ class UserRepository(
             val user = store.getStore().get(username)
             mapOf(username to user)
         } else {
-            val returnType = object : ParameterizedTypeReference<Map<String,User>>() {}
+            val returnType = object : ParameterizedTypeReference<Map<String, User>>() {}
 
             val user = restTemplate.exchange(
-                    "http://$thisHost:$keyPort/users/$username",
-                    HttpMethod.GET,
-                    null,
-                    returnType
+                "http://$thisHost:$keyPort/users/$username",
+                HttpMethod.GET,
+                null,
+                returnType
             ).body
-
             user
         }
     }

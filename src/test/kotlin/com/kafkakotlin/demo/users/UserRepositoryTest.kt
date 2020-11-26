@@ -7,7 +7,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyQueryMetadata
 import org.apache.kafka.streams.KeyValue
@@ -97,7 +97,7 @@ internal class UserRepositoryTest {
             val hostInfo = HostInfo("localhost", 9999)
             val username = "steve"
             every { streamsBuilderFactoryBean.kafkaStreams } returns kafkaStreams
-            every {streamsBuilderFactoryBean.kafkaStreams.queryMetadataForKey(any(), any(), Serdes.String().serializer())} returns KeyQueryMetadata(hostInfo, emptySet(), 1)
+            every { kafkaStreams.queryMetadataForKey(any(), any(), any<StringSerializer>()) } returns KeyQueryMetadata(hostInfo, emptySet(), 1)
             every { store.getStore().get(any()) } returns testUser
 
             val result = underTest.getByUsername(username)
