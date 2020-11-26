@@ -18,11 +18,8 @@ import org.junit.jupiter.api.Test
 
 internal class UserTopologyTest() {
     private lateinit var testDriver: TopologyTestDriver
-    private lateinit var userTopology: UserTopology
     private lateinit var userTopic: TestInputTopic<String, User>
     private lateinit var userStore: ReadOnlyKeyValueStore<String, User>
-    private val builder = StreamsBuilder()
-    private val objectMapper = jacksonObjectMapper()
 
     @BeforeEach
     fun setup() {
@@ -32,7 +29,11 @@ internal class UserTopologyTest() {
             StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG to Serdes.String().javaClass.name,
             StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG to Serdes.String().javaClass.name
         ).toProperties()
-        userTopology = UserTopology(builder, objectMapper)
+
+        val builder = StreamsBuilder()
+        val objectMapper = jacksonObjectMapper()
+        val userTopology = UserTopology(builder, objectMapper)
+
         testDriver = TopologyTestDriver(builder.build(), config)
         val stringSerde = Serdes.String()
         val userSerde = UserSerde(objectMapper)

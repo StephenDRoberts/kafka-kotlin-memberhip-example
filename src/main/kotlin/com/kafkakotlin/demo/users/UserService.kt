@@ -11,7 +11,7 @@ class UserService(
 
     fun getUsers(): Map<String, User> = userRepository.getUsers()
 
-    fun getByUsername(username: String): Map<String, User?> = userRepository.getByUsername(username)
+    fun getByUsername(username: String): Map<String, User>? = userRepository.getByUsername(username)
 
     fun getProxiedLocalUsers(): Map<String, User> = userRepository.getLocalUsers()
 }

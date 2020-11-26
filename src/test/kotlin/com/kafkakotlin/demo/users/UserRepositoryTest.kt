@@ -6,8 +6,12 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import io.mockk.slot
+import io.mockk.verify
+import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.streams.KafkaStreams
+import org.apache.kafka.streams.KeyQueryMetadata
 import org.apache.kafka.streams.KeyValue
+import org.apache.kafka.streams.state.HostInfo
 import org.apache.kafka.streams.state.KeyValueIterator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -24,6 +28,8 @@ internal class UserRepositoryTest {
     private val streamsBuilderFactoryBean = mockk<StreamsBuilderFactoryBean>()
     private val restTemplate = mockk<RestTemplate>()
     private val kafkaProperties = mockk<KafkaProperties>()
+    private val kafkaStreams = mockk<KafkaStreams>()
+//    private val keyQueryMetadata = mockk<KeyQueryMetadata>()
 
     private val properties = mapOf("application.server" to "localhost:9999")
     private val testUser = User("steve", "steve@example.com", "super-strong-password-1")
@@ -40,12 +46,10 @@ internal class UserRepositoryTest {
 
     @Test
     fun `should pass given User to kafkaProducer when creating a user`() {
-        val slot = slot<User>()
-
-        every { kafkaProducer.publishMessageToKafka(capture(slot)) } just runs
+        every { kafkaProducer.publishMessageToKafka(any()) } just runs
         underTest.createUser(testUser)
 
-        assertThat(testUser).isEqualTo(slot.captured)
+        verify { kafkaProducer.publishMessageToKafka(testUser) }
     }
 
     @Nested
@@ -70,9 +74,6 @@ internal class UserRepositoryTest {
             every { restTemplate.exchange(any<String>(), any(), null, returnType).body } returns mapOf("1" to testUser)
 
             val remoteUsers = underTest.getRemoteUsers("localhost", "9099")
-//                    .javaClass.getDeclaredMethod("getRemoteUsers", String::class.java)
-
-//
 
             assertThat(remoteUsers["1"]).isEqualTo(testUser)
         }
@@ -85,6 +86,23 @@ internal class UserRepositoryTest {
             val remoteUsers = underTest.getRemoteUsers("localhost", "9099")
 
             assertThat(remoteUsers.size).isEqualTo(0)
+        }
+    }
+
+    @Nested
+    inner class IndividualUsers {
+
+        @Test
+        fun `should return a map of a specific user`() {
+            val hostInfo = HostInfo("localhost", 9999)
+            val username = "steve"
+            every { streamsBuilderFactoryBean.kafkaStreams } returns kafkaStreams
+            every {streamsBuilderFactoryBean.kafkaStreams.queryMetadataForKey(any(), any(), Serdes.String().serializer())} returns KeyQueryMetadata(hostInfo, emptySet(), 1)
+            every { store.getStore().get(any()) } returns testUser
+
+            val result = underTest.getByUsername(username)
+
+            assertThat(result?.size).isEqualTo(1)
         }
     }
 }

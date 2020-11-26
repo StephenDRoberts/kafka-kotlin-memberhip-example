@@ -32,19 +32,16 @@ class UserRepository(
         return kafkaProducer.publishMessageToKafka(user)
     }
 
-    fun getByUsername(username: String): Map<String, User?> {
-//        val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
-//        val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
-
+    fun getByUsername(username: String): Map<String, User>? {
         val metaDataForKey = streamsBuilderFactoryBean.kafkaStreams.queryMetadataForKey("user-store", username, Serdes.String().serializer())
+        println(metaDataForKey)
         val keyPort = metaDataForKey.activeHost.port().toString()
 
-        return if(thisPort == keyPort){
-            val user = store.getStore().get(username);
-            return mapOf(username to user)
-
+        return return if (thisPort == keyPort) {
+            val user = store.getStore().get(username)
+            mapOf(username to user)
         } else {
-            val returnType = object : ParameterizedTypeReference<User>() {}
+            val returnType = object : ParameterizedTypeReference<Map<String,User>>() {}
 
             val user = restTemplate.exchange(
                     "http://$thisHost:$keyPort/users/$username",
@@ -52,13 +49,9 @@ class UserRepository(
                     null,
                     returnType
             ).body
-            return mapOf(username to user)
-        }
-//        val userDetails = mutableMapOf<String, User>()
-//
-//        val localUsers = store.getStore().get(username)
-//        println(localUsers)
 
+            user
+        }
     }
 
     fun getUsers(): Map<String, User> {
@@ -84,12 +77,12 @@ class UserRepository(
     fun getLocalUsers(): Map<String, User> {
         while (true) {
             try {
-                val stateStore =  store.getStore();
+                val stateStore = store.getStore()
                 return convertKeyValuesToMap(stateStore.all())
             } catch (e: InvalidStateStoreException) {
                 // store not yet ready for querying
                 println("retrying...")
-                Thread.sleep(100);
+                Thread.sleep(100)
             }
         }
     }
