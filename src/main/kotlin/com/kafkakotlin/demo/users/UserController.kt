@@ -22,7 +22,7 @@ class UserController(
     }
 
     @GetMapping("/{username}")
-    fun getByUsername(@PathVariable username: String) {
+    fun getByUsername(@PathVariable username: String): Map<String, User?> {
         return userService.getByUsername(username)
     }
 

@@ -3,6 +3,7 @@ package com.kafkakotlin.demo.users
 import com.kafkakotlin.demo.kafka.producer.KafkaProducer
 import com.kafkakotlin.demo.kafka.statestorequery.StateStoreQuery
 import mu.KLogging
+import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.errors.InvalidStateStoreException
 import org.apache.kafka.streams.state.KeyValueIterator
@@ -31,13 +32,32 @@ class UserRepository(
         return kafkaProducer.publishMessageToKafka(user)
     }
 
-    fun getByUsername(username: String) {
-        val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
-        val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
-        val userDetails = mutableMapOf<String, User>()
+    fun getByUsername(username: String): Map<String, User?> {
+//        val metadata = streamsBuilderFactoryBean.kafkaStreams.allMetadataForStore("user-store")
+//        val hostAndPortList = metadata.map { data -> mapOf("host" to data.host(), "port" to data.port().toString()) }
 
-        val localUsers = store.getStore().get(username)
-        println(localUsers)
+        val metaDataForKey = streamsBuilderFactoryBean.kafkaStreams.queryMetadataForKey("user-store", username, Serdes.String().serializer())
+        val keyPort = metaDataForKey.activeHost.port().toString()
+
+        return if(thisPort == keyPort){
+            val user = store.getStore().get(username);
+            return mapOf(username to user)
+
+        } else {
+            val returnType = object : ParameterizedTypeReference<User>() {}
+
+            val user = restTemplate.exchange(
+                    "http://$thisHost:$keyPort/users/$username",
+                    HttpMethod.GET,
+                    null,
+                    returnType
+            ).body
+            return mapOf(username to user)
+        }
+//        val userDetails = mutableMapOf<String, User>()
+//
+//        val localUsers = store.getStore().get(username)
+//        println(localUsers)
 
     }
 
