@@ -3,7 +3,9 @@ package com.kafkakotlin.demo.users
 import com.kafkakotlin.demo.kafka.producer.KafkaProducer
 import com.kafkakotlin.demo.kafka.statestorequery.StateStoreQuery
 import mu.KLogging
+import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.errors.InvalidStateStoreException
 import org.apache.kafka.streams.state.KeyValueIterator
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.core.ParameterizedTypeReference
@@ -27,7 +29,28 @@ class UserRepository(
     private val thisPort = applicationServer[1]
 
     fun createUser(user: User) {
-        return kafkaProducer.strikeMessageToKafka(user)
+        return kafkaProducer.publishMessageToKafka(user)
+    }
+
+    fun getByUsername(username: String): Map<String, User>? {
+        val metaDataForKey = streamsBuilderFactoryBean.kafkaStreams.queryMetadataForKey("user-store", username, Serdes.String().serializer())
+        println(metaDataForKey)
+        val keyPort = metaDataForKey.activeHost.port().toString()
+
+        return return if (thisPort == keyPort) {
+            val user = store.getStore().get(username)
+            mapOf(username to user)
+        } else {
+            val returnType = object : ParameterizedTypeReference<Map<String, User>>() {}
+
+            val user = restTemplate.exchange(
+                "http://$thisHost:$keyPort/users/$username",
+                HttpMethod.GET,
+                null,
+                returnType
+            ).body
+            user
+        }
     }
 
     fun getUsers(): Map<String, User> {
@@ -44,20 +67,29 @@ class UserRepository(
         val filteredHosts = hostAndPortList.filterNot { it -> it["host"] == thisHost && it["port"] == thisPort }
 
         for (entry in filteredHosts) {
-            val remoteUsers = getRemoteUsers(entry["host"], entry["port"])
+            val remoteUsers = getRemoteUsers(entry["host"] as String, entry["port"] as String)
             remoteUsers.map { (key, value) -> userList[key] = value }
         }
         return userList
     }
 
     fun getLocalUsers(): Map<String, User> {
-        return convertKeyValuesToMap(store.getStore().all())
+        while (true) {
+            try {
+                val stateStore = store.getStore()
+                return convertKeyValuesToMap(stateStore.all())
+            } catch (e: InvalidStateStoreException) {
+                // store not yet ready for querying
+                println("retrying...")
+                Thread.sleep(100)
+            }
+        }
     }
 
-    fun getRemoteUsers(host: String?, port: String?): Map<String, User> {
+    fun getRemoteUsers(host: String, port: String): Map<String, User> {
         val returnType = object : ParameterizedTypeReference<Map<String, User>>() {}
         val remoteItems = restTemplate.exchange(
-            "http://$host:$port/user/remote",
+            "http://$host:$port/users/remote",
             HttpMethod.GET,
             null,
             returnType

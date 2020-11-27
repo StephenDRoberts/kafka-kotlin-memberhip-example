@@ -1,6 +1,5 @@
 package com.kafkakotlin.demo.kafka.producer
 
-// import com.kafkakotlin.demo.kafka.KafkaConfiguration
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 class ProducerTest {
 
-//    TODO setup kafka prodcuer test like CMS
+//    TODO setup kafka producer test like with custom consumer/producer
     @Test
     fun `runs`() {
     }

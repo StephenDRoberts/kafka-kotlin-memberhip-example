@@ -19,7 +19,7 @@ internal class StateStoreQueryTest {
     @Test
     fun `should return a state store`() {
         every { streamsBuilderFactoryBean.kafkaStreams } returns kafkaStreams
-        every { streamsBuilderFactoryBean.kafkaStreams.store(any<StoreQueryParameters<*>>()) } returns store
+        every { kafkaStreams.store(any<StoreQueryParameters<*>>()) } returns store
 
         val stateStore = stateStoreQuery.getStore()
 

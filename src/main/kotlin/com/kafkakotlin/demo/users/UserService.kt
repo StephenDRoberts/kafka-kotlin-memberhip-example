@@ -7,15 +7,11 @@ class UserService(
     val userRepository: UserRepository
 ) {
 
-    fun createUser(user: User) {
-        return userRepository.createUser(user)
-    }
+    fun createUser(user: User) = userRepository.createUser(user)
 
-    fun getUsers(): Map<String, User> {
-        return userRepository.getUsers()
-    }
+    fun getUsers(): Map<String, User> = userRepository.getUsers()
 
-    fun getRemoteUsers(): Map<String, User> {
-        return userRepository.getLocalUsers()
-    }
+    fun getByUsername(username: String): Map<String, User>? = userRepository.getByUsername(username)
+
+    fun getProxiedLocalUsers(): Map<String, User> = userRepository.getLocalUsers()
 }

@@ -3,6 +3,7 @@ package com.kafkakotlin.demo.users
 import mu.KLogging
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 class UserController(
     val userService: UserService
 ) {
@@ -21,14 +22,19 @@ class UserController(
         return userService.createUser(user)
     }
 
-    @GetMapping("/all")
+    @GetMapping
     fun getAllUsers(): Map<String, User> {
         return userService.getUsers()
     }
 
+    @GetMapping("/{username}")
+    fun getByUsername(@PathVariable username: String): Map<String, User>? {
+        return userService.getByUsername(username)
+    }
+
     @GetMapping("/remote")
-    fun getRemoteUsers(): Map<String, User> {
-        return userService.getRemoteUsers()
+    fun getProxiedLocalUsers(): Map<String, User> {
+        return userService.getProxiedLocalUsers()
     }
 
     companion object : KLogging()
