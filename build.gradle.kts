@@ -41,7 +41,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("io.mockk:mockk:1.10.2")
     testImplementation("org.springframework.kafka:spring-kafka-test:2.5.1.RELEASE")
-//    testImplementation("org.assertj:assertj-core:3.18.1")
 }
 
 tasks.withType<Test> {

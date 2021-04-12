@@ -34,10 +34,9 @@ class UserRepository(
 
     fun getByUsername(username: String): Map<String, User>? {
         val metaDataForKey = streamsBuilderFactoryBean.kafkaStreams.queryMetadataForKey("user-store", username, Serdes.String().serializer())
-        println(metaDataForKey)
         val keyPort = metaDataForKey.activeHost.port().toString()
 
-        return return if (thisPort == keyPort) {
+        return if (thisPort == keyPort) {
             val user = store.getStore().get(username)
             mapOf(username to user)
         } else {

@@ -29,7 +29,6 @@ internal class UserRepositoryTest {
     private val restTemplate = mockk<RestTemplate>()
     private val kafkaProperties = mockk<KafkaProperties>()
     private val kafkaStreams = mockk<KafkaStreams>()
-//    private val keyQueryMetadata = mockk<KeyQueryMetadata>()
 
     private val properties = mapOf("application.server" to "localhost:9999")
     private val testUser = User("steve", "steve@example.com", "super-strong-password-1")

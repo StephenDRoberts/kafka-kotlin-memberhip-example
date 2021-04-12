@@ -52,6 +52,7 @@ internal class UserTopologyTest() {
         val hashedPassword = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString()
         val testUser = User("steve", "steve@example.com", password)
         val testUserWithHashedPassword = User("steve", "steve@example.com", hashedPassword)
+
         userTopic.pipeInput("1", testUser)
 
         val storedValue = userStore.get("1")

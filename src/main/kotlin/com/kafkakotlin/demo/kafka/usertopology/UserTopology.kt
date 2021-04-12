@@ -37,7 +37,6 @@ class UserTopology(
                 val username = value.username
                 val email = value.email
                 val hashedPassword = Hashing.sha256().hashString(value.password, StandardCharsets.UTF_8).toString()
-
                 KeyValue(key, User(username, email, hashedPassword))
             }
             .toTable(
